@@ -17,6 +17,7 @@
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
 from .answer_callback_query import AnswerCallbackQuery
+from .answer_chat_join_request_query import AnswerChatJoinRequestQuery
 from .answer_guest_query import AnswerGuestQuery
 from .answer_inline_query import AnswerInlineQuery
 from .answer_pre_checkout_query import AnswerPreCheckoutQuery
@@ -33,15 +34,16 @@ from .get_bot_info_description import GetBotInfoDescription
 from .get_bot_api_me import GetBotApiMe
 from .get_bot_info_short_description import GetBotInfoShortDescription
 from .get_bot_name import GetBotName
-from .get_managed_bot_token import GetManagedBotToken
-from .replace_managed_bot_token import ReplaceManagedBotToken
 from .get_chat_menu_button import GetChatMenuButton
 from .get_game_high_scores import GetGameHighScores
 from .get_inline_bot_results import GetInlineBotResults
 from .get_managed_bot_access_settings import GetManagedBotAccessSettings
+from .get_managed_bot_token import GetManagedBotToken
 from .get_owned_bots import GetOwnedBots
 from .refund_star_payment import RefundStarPayment
+from .replace_managed_bot_token import ReplaceManagedBotToken
 from .request_callback_answer import RequestCallbackAnswer
+from .send_chat_join_request_web_app import SendChatJoinRequestWebApp
 from .send_game import SendGame
 from .send_inline_bot_result import SendInlineBotResult
 from .send_invoice import SendInvoice
@@ -57,6 +59,7 @@ from .set_managed_bot_access_settings import SetManagedBotAccessSettings
 
 class Bots(
     AnswerCallbackQuery,
+    AnswerChatJoinRequestQuery,
     AnswerGuestQuery,
     AnswerInlineQuery,
     AnswerPreCheckoutQuery,
@@ -67,6 +70,7 @@ class Bots(
     GetOwnedBots,
     RefundStarPayment,
     RequestCallbackAnswer,
+    SendChatJoinRequestWebApp,
     SendInlineBotResult,
     SendInvoice,
     SendGame,

@@ -16,23 +16,37 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "2.2.23"
-__license__ = "GNU Lesser General Public License v3.0 (LGPL-3.0)"
-__copyright__ = "Copyright (C) 2017-present Dan <https://github.com/delivrance>"
+from typing import Callable, Optional, Union
+
+import pyrogram
+from pyrogram import raw
+
+from .input_media import InputMedia
 
 
-class StopTransmission(Exception):
-    pass
+class InputMediaLink(InputMedia):
+    """Represents an HTTP link to be sent.
 
+    Parameters:
+        url (``str``):
+            HTTP URL of the link.
+    """
 
-class StopPropagation(StopAsyncIteration):
-    pass
+    def __init__(
+        self,
+        url: str,
+    ):
+        super().__init__()
 
+        self.url = url
 
-class ContinuePropagation(StopAsyncIteration):
-    pass
-
-
-from . import raw, types, filters, handlers, enums
-from .client import Client
-from .sync import idle, compose
+    async def write(
+        self,
+        *,
+        client: "pyrogram.Client",
+        chat_id: Optional[Union[int, str]] = None,
+        progress: Optional[Callable] = None,
+        progress_args: tuple = (),
+        **kwargs,
+    ) -> "raw.base.InputMedia":
+        return raw.types.InputMediaWebPage(url=self.url)
