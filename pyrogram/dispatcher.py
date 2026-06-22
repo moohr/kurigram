@@ -278,11 +278,17 @@ class Dispatcher:
             )
 
         async def guest_message_parser(update, users, chats):
-            # Guest messages are parsed the same way as new messages, but the handler is different
-            # Pre-parse referenced messages so they get cached before the main message
-            for ref in update.reference_messages or []:
-                await pyrogram.types.Message._parse(self.client, ref, users, chats)
+            # Parse referenced messages first so they get cached, and keep them
+            refs = []
+            for raw_ref in update.reference_messages or []:
+                ref = await pyrogram.types.Message._parse(
+                    self.client, raw_ref, users, chats,
+                )
+                if ref is not None:
+                    refs.append(ref)
             parsed, _ = await message_parser(update, users, chats)
+            if parsed is not None:
+                parsed.reference_messages = refs
 
             return (
                 parsed,

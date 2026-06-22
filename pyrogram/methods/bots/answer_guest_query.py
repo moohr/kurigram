@@ -16,8 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
+from typing import Optional
+
 import pyrogram
-from pyrogram import raw, types
+from pyrogram import enums, raw, types
 
 
 class AnswerGuestQuery:
@@ -59,3 +61,39 @@ class AnswerGuestQuery:
         )
 
         return await types.SentGuestMessage._parse(r)
+
+    async def answer_guest_text(
+        self: "pyrogram.Client",
+        guest_query_id: str,
+        text: str,
+        parse_mode: Optional["enums.ParseMode"] = None,
+    ):
+        """Convenience method to reply to a guest message with simple text.
+
+        Wraps the text in an :obj:`~pyrogram.types.InlineQueryResultArticle` with
+        :obj:`~pyrogram.types.InputTextMessageContent` and calls :meth:`~pyrogram.Client.answer_guest_query`.
+
+        Parameters:
+            guest_query_id (``str``):
+                Unique identifier for the answered query.
+
+            text (``str``):
+                Text of the message to be sent.
+
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+
+        Returns:
+            :obj:`~pyrogram.types.SentGuestMessage`: On success, a :obj:`~pyrogram.types.SentGuestMessage` object is returned.
+        """
+        return await self.answer_guest_query(
+            guest_query_id,
+            types.InlineQueryResultArticle(
+                title="Response",
+                input_message_content=types.InputTextMessageContent(
+                    message_text=text,
+                    parse_mode=parse_mode,
+                ),
+            ),
+        )

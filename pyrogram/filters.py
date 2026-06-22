@@ -896,6 +896,50 @@ A media message contains any of the following fields set: *audio*, *document*, *
 
 # endregion
 
+# region guest_filter
+async def guest_filter(_, __, m: Message):
+    return m.guest_query_id is not None
+
+
+guest = create(guest_filter)
+"""Filter guest messages. Messages that have a *guest_query_id* set."""
+
+
+# endregion
+
+# region guest_text_filter
+async def guest_text_filter(_, __, m: Message):
+    return m.guest_query_id is not None and bool(m.text)
+
+
+guest_text = create(guest_text_filter)
+"""Filter guest text messages."""
+
+
+# endregion
+
+# region guest_photo_filter
+async def guest_photo_filter(_, __, m: Message):
+    return m.guest_query_id is not None and bool(m.photo)
+
+
+guest_photo = create(guest_photo_filter)
+"""Filter guest photo messages."""
+
+
+# endregion
+
+# region guest_document_filter
+async def guest_document_filter(_, __, m: Message):
+    return m.guest_query_id is not None and bool(m.document)
+
+
+guest_document = create(guest_document_filter)
+"""Filter guest document messages."""
+
+
+# endregion
+
 # region scheduled_filter
 async def scheduled_filter(_, __, m: Message):
     return bool(m.scheduled)

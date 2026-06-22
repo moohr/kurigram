@@ -52,6 +52,12 @@ class Terminate:
         await self.storage.save()
         await self.dispatcher.stop(clear_handlers=clear_handlers)
 
+        if self.guest_poller:
+            await self.guest_poller.stop()
+
+        if self.bot_api:
+            await self.bot_api.close()
+
         for media_session in self.media_sessions.values():
             await media_session.stop()
 

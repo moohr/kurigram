@@ -246,6 +246,12 @@ class Client(Methods):
         init_connection_params (``dict``, *optional*):
             Additional initConnection parameters.
             For now, only the tz_offset field is supported, for specifying timezone offset in seconds.
+
+        enable_guest_updates (``bool``, *optional*):
+            Pass True to enable Bot API-style polling for guest messages via getUpdates.
+            Requires a bot token. When enabled, a Bot API HTTP poller is started alongside
+            the MTProto connection to receive guest_message updates.
+            Defaults to False.
     """
 
     APP_VERSION = f"Pyrogram {__version__}"
@@ -318,7 +324,8 @@ class Client(Methods):
         init_connection_params: Optional[dict] = None,
         connection_factory: Type[Connection] = Connection,
         protocol_factory: Type[TCP] = TCPAbridged,
-        loop: Optional[asyncio.AbstractEventLoop] = None
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        enable_guest_updates: Optional[bool] = False,
     ):
         super().__init__()
 
@@ -361,6 +368,7 @@ class Client(Methods):
         self.init_connection_params = init_connection_params
         self.connection_factory = connection_factory
         self.protocol_factory = protocol_factory
+        self.enable_guest_updates = enable_guest_updates
 
         self.executor = ThreadPoolExecutor(self.workers, thread_name_prefix="Handler")
 
@@ -381,6 +389,18 @@ class Client(Methods):
             self.storage = SQLiteStorage(self.name, workdir=self.workdir)
 
         self.dispatcher: Dispatcher = Dispatcher(self)
+
+        self.bot_api = None
+        self.guest_poller = None
+
+        if self.bot_token and self.enable_guest_updates:
+            try:
+                from pyrogram.bot_api import BotApiClient, GuestPoller
+
+                self.bot_api = BotApiClient(self.bot_token)
+                self.guest_poller = GuestPoller(self)
+            except ImportError:
+                pass
 
         self.rnd_id = MsgId
         self._server_time_offset = 0.0

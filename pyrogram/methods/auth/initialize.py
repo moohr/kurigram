@@ -45,6 +45,9 @@ class Initialize:
 
         await self.dispatcher.start()
 
+        if self.guest_poller:
+            await self.guest_poller.start()
+
         self.updates_watchdog_task = self.loop.create_task(self.updates_watchdog())
 
         self.is_initialized = True

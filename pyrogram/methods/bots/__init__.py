@@ -30,6 +30,7 @@ from .edit_user_star_subscription import EditUserStarSubscription
 from .get_bot_commands import GetBotCommands
 from .get_bot_default_privileges import GetBotDefaultPrivileges
 from .get_bot_info_description import GetBotInfoDescription
+from .get_bot_api_me import GetBotApiMe
 from .get_bot_info_short_description import GetBotInfoShortDescription
 from .get_bot_name import GetBotName
 from .get_managed_bot_token import GetManagedBotToken
@@ -79,6 +80,7 @@ class Bots(
     SetBotInfoDescription,
     SetBotInfoShortDescription,
     SetBotName,
+    GetBotApiMe,
     GetBotDefaultPrivileges,
     GetBotInfoDescription,
     GetBotInfoShortDescription,

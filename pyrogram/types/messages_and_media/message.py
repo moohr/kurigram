@@ -597,6 +597,10 @@ class Message(Object, Update):
             IETF language tag of the message language on which it can be summarized.
             None if summary isn't available for the message.
 
+        reference_messages (List of :obj:`~pyrogram.types.Message`, *optional*):
+            Messages referenced by a guest chat query. For guest messages, this contains any context/reference messages
+            that were supplied alongside the guest message (e.g., replied-to messages).
+
         guest_bot_caller_user (:obj:`~pyrogram.types.User`, *optional*):
             For a message sent by a guest bot, this is the user whose original message triggered the bot's response.
 
@@ -786,6 +790,7 @@ class Message(Object, Update):
         summary_language_code: Optional[str] = None,
         guest_bot_caller_user: Optional["types.User"] = None,
         guest_bot_caller_chat: Optional["types.Chat"] = None,
+        reference_messages: Optional[List["Message"]] = None,
         raw: Optional["raw.types.Message"] = None
     ):
         super().__init__(client)
@@ -911,6 +916,7 @@ class Message(Object, Update):
         self.direct_message_price_changed = direct_message_price_changed
         self.checklist_tasks_done = checklist_tasks_done
         self.checklist_tasks_added = checklist_tasks_added
+        self.reference_messages = reference_messages
         self.premium_gift_code = premium_gift_code
         self.gifted_premium = gifted_premium
         self.gifted_stars = gifted_stars
@@ -4736,6 +4742,39 @@ class Message(Object, Update):
             paid_message_star_count=paid_message_star_count,
             suggested_post_parameters=suggested_post_parameters,
             reply_markup=reply_markup
+        )
+
+    async def answer_text(
+        self,
+        text: str,
+        parse_mode: Optional["enums.ParseMode"] = None,
+    ):
+        """Convenience method to reply to a guest message with simple text.
+
+        Uses :meth:`~pyrogram.Client.answer_guest_text` to respond to a guest query.
+        Only works for messages with a non-empty *guest_query_id*.
+
+        Parameters:
+            text (``str``):
+                Text of the message to be sent.
+
+            parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
+                By default, texts are parsed using both Markdown and HTML styles.
+                You can combine both syntaxes together.
+
+        Returns:
+            :obj:`~pyrogram.types.SentGuestMessage`: On success, a :obj:`~pyrogram.types.SentGuestMessage` object is returned.
+
+        Raises:
+            RuntimeError: In case the message has no *guest_query_id*.
+        """
+        if not self.guest_query_id:
+            raise RuntimeError("This message has no guest_query_id")
+
+        return await self._client.answer_guest_text(
+            self.guest_query_id,
+            text,
+            parse_mode=parse_mode,
         )
 
     async def reply_photo(

@@ -30,7 +30,10 @@ class User:
 
 
 class Message:
-    def __init__(self, text: str = None, caption: str = None):
+    def __init__(self, text: str = None, caption: str = None, guest_query_id: str = None):
         self.text = text
         self.caption = caption
         self.command = None
+        self.guest_query_id = guest_query_id
+        self.photo = None
+        self.document = None
